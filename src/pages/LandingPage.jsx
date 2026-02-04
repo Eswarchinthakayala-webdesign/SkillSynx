@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 
-import Background3D from '@/components/Background3D';
+
 
 // --- Animation Variants ---
 const fadeInUp = {
@@ -35,9 +35,7 @@ const staggerContainer = {
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden selection:bg-primary/30 font-sans">
-      {/* 3D Background */}
-      <Background3D />
+    <div className="min-h-screen bg-transparent text-foreground overflow-x-hidden selection:bg-primary/30 font-sans">
       
       {/* Background Gradients - Subtle & Clean */}
       <div className="fixed inset-0 z-0 pointer-events-none">

@@ -51,41 +51,37 @@ const ResumeAnalyzer = () => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        console.log("Processing file:", file.name, file.type);
+        setIsAnalyzing(true);
 
-        if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-            try {
-                const reader = new FileReader();
-                reader.onload = async (event) => {
-                    try {
-                        const typedarray = new Uint8Array(event.target.result);
-                        const loadingTask = pdfjsLib.getDocument(typedarray);
-                        const pdf = await loadingTask.promise;
-                        let fullText = '';
-                        
-                        for (let i = 1; i <= pdf.numPages; i++) {
-                            const page = await pdf.getPage(i);
-                            const textContent = await page.getTextContent();
-                            const pageText = textContent.items.map(item => item.str).join(' ');
-                            fullText += pageText + '\n';
-                        }
-                        setResumeText(fullText.trim());
-                    } catch (parseError) {
-                        console.error("PDF Parsing Error:", parseError);
-                        alert("Could not extract text from this PDF. It might be scanned or encrypted. Please copy the text manually.");
-                    }
-                };
-                reader.readAsArrayBuffer(file);
-            } catch (err) {
-                console.error("File Reading Error:", err);
-                alert("Error reading file.");
+        try {
+            let text = '';
+            if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                const arrayBuffer = await file.arrayBuffer();
+                const loadingTask = pdfjsLib.getDocument(new Uint8Array(arrayBuffer));
+                const pdf = await loadingTask.promise;
+                
+                let fullText = '';
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += pageText + '\n';
+                }
+                text = fullText.trim();
+            } else {
+                text = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = (e) => reject(e);
+                    reader.readAsText(file);
+                });
             }
-        } else {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                setResumeText(event.target.result);
-            };
-            reader.readAsText(file);
+            setResumeText(text);
+        } catch (err) {
+            console.error("File processing error:", err);
+            alert("Error reading file. Please try pasting the text instead.");
+        } finally {
+            setIsAnalyzing(false);
         }
     };
 
@@ -150,7 +146,7 @@ const ResumeAnalyzer = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B0F1A] text-foreground font-sans">
+        <div className="min-h-screen text-foreground font-sans">
             <DashboardHeader />
 
             <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto">
@@ -277,7 +273,65 @@ const ResumeAnalyzer = () => {
                     {/* Right Panel: Results */}
                     <div className="lg:col-span-8">
                         <AnimatePresence mode="wait">
-                            {analysisResult ? (
+                            {isAnalyzing ? (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="h-full flex flex-col items-center justify-center min-h-[400px] bg-[#131722]/60 backdrop-blur-xl border border-white/5 rounded-2xl relative overflow-hidden"
+                                >
+                                    {/* Abstract Grid Background */}
+                                    <div className="absolute inset-0 bg-grid-white/[0.02]" />
+                                    
+                                    {/* Scanning Effect */}
+                                    <div className="relative z-10 w-64 h-80 bg-white/5 rounded-lg border border-white/10 overflow-hidden flex flex-col p-4 space-y-3 mb-8 shadow-2xl shadow-indigo-500/10">
+                                        <div className="w-1/3 h-2 bg-white/20 rounded" />
+                                        <div className="w-full h-2 bg-white/10 rounded" />
+                                        <div className="w-5/6 h-2 bg-white/10 rounded" />
+                                        <div className="w-4/5 h-2 bg-white/10 rounded" />
+                                        <div className="w-full h-10 bg-white/5 rounded mt-4" />
+                                        <div className="space-y-2 mt-4">
+                                            <div className="w-full h-2 bg-white/10 rounded" />
+                                            <div className="w-full h-2 bg-white/10 rounded" />
+                                            <div className="w-2/3 h-2 bg-white/10 rounded" />
+                                        </div>
+
+                                        {/* Scanner Line */}
+                                        <motion.div 
+                                            className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent blur-sm"
+                                            animate={{ top: ["0%", "100%", "0%"] }}
+                                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                        />
+                                        <motion.div 
+                                            className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-cyan-500/20 to-transparent"
+                                            animate={{ top: ["-10%", "90%", "-10%"] }}
+                                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                                        />
+                                    </div>
+
+                                    <div className="relative z-10 text-center space-y-3">
+                                        <div className="flex items-center justify-center gap-2 text-cyan-400">
+                                            <Loader2 className="w-5 h-5 animate-spin" />
+                                            <span className="font-mono text-sm tracking-widest uppercase">Processing</span>
+                                        </div>
+                                        
+                                        <div className="h-8 overflow-hidden relative">
+                                            <motion.div
+                                                animate={{ y: [0, -32, -64, -96, 0] }}
+                                                transition={{ duration: 8, repeat: Infinity, times: [0, 0.25, 0.5, 0.75, 1], ease: "easeInOut" }}
+                                                className="flex flex-col items-center"
+                                            >
+                                                <span className="h-8 flex items-center text-white font-medium text-lg">Parsing Resume Content...</span>
+                                                <span className="h-8 flex items-center text-white font-medium text-lg">Identifying Key Skills...</span>
+                                                <span className="h-8 flex items-center text-white font-medium text-lg">Calculating ATS Score...</span>
+                                                <span className="h-8 flex items-center text-white font-medium text-lg">Generating Feedback...</span>
+                                                <span className="h-8 flex items-center text-white font-medium text-lg">Parsing Resume Content...</span>
+                                            </motion.div>
+                                        </div>
+                                    </div>
+
+                                </motion.div>
+                            ) : analysisResult ? (
                                 <motion.div 
                                     className="space-y-6"
                                     initial={{ opacity: 0, scale: 0.95 }}

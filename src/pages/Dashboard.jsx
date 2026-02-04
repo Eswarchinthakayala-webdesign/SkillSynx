@@ -49,7 +49,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B0F1A] text-foreground font-sans selection:bg-indigo-500/30">
+        <div className="min-h-screen text-foreground font-sans selection:bg-indigo-500/30">
             <DashboardHeader />
             
             <main className="pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto">

@@ -12,7 +12,7 @@ import ResumeAnalyzer from './pages/ResumeAnalyzer'
 import ResumeDetailsPage from './pages/ResumeDetailsPage'
 import JobMatchesPage from './pages/JobMatchesPage'
 import ResumesPage from './pages/ResumesPage'
-import './index.css'
+import Background3D from './components/ui/Background3D'
 
 const router = createBrowserRouter([
   {
@@ -71,6 +71,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <AuthProvider>
+      <Background3D />
       <RouterProvider router={router} />
     </AuthProvider>
   )

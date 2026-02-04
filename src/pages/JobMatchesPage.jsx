@@ -111,136 +111,112 @@ const JobMatchesPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0B0F1A] text-foreground font-sans">
+        <div className="min-h-screen max-w-8xl mx-auto text-foreground font-sans">
             <DashboardHeader />
 
-            <main className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto">
+            <main className="pt-28 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto relative z-10">
                 <motion.div 
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4"
+                    className="md:flex md:items-end md:justify-between mb-10"
                 >
-                    <div className="flex items-center gap-4">
-                        <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            onClick={() => navigate(-1)}
-                            className="rounded-full hover:bg-white/5"
-                        >
-                            <ArrowLeft className="w-5 h-5 text-muted-foreground" />
-                        </Button>
-                        <div>
-                            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                                <Briefcase className="w-6 h-6 text-indigo-500" /> Suggested Roles
-                            </h1>
-                            <p className="text-muted-foreground text-sm">
-                                Find curated opportunities based on your profile & preferences
-                            </p>
-                        </div>
+                    <div className="max-w-3xl space-y-4">
+                        <Badge variant="outline" className="border-indigo-500/30 text-indigo-300 bg-indigo-500/10 px-3 py-1 rounded-full text-xs uppercase tracking-wider mb-2">
+                             AI-Powered Recruiter
+                        </Badge>
+                        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                            Job Intelligence
+                        </h1>
+                        <p className="text-muted-foreground text-lg md:text-xl max-w-2xl text-balance leading-relaxed">
+                            Discover curated career opportunities perfectly matched to your skills, experience, and aspirations.
+                        </p>
                     </div>
                 </motion.div>
 
-                {/* Search Configuration */}
+                {/* Refined Search Toolbar */}
                 <motion.div
                      initial={{ opacity: 0, y: 10 }}
                      animate={{ opacity: 1, y: 0 }}
-                     className="mb-8"
+                     className="mb-12 sticky top-24 z-30"
                 >
-                    <Card className="bg-[#131722]/60 backdrop-blur-xl border-white/5">
-                        <CardHeader>
-                            <CardTitle className="text-lg text-white flex items-center gap-2">
-                                <Search className="w-4 h-4 text-emerald-400" /> Refine Search
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-xs font-medium text-muted-foreground">Target Role</label>
-                                    <div className="relative">
-                                        <Briefcase className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
-                                        <Input 
-                                            placeholder="e.g. Senior Frontend Dev" 
-                                            value={searchRole}
-                                            onChange={(e) => setSearchRole(e.target.value)}
-                                            className="pl-9 bg-black/20 border-white/10 text-white focus:border-indigo-500/50"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-medium text-muted-foreground">Location</label>
-                                    <div className="relative">
-                                        <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
-                                        <Input 
-                                            placeholder="e.g. Remote, San Francisco" 
-                                            value={searchLocation}
-                                            onChange={(e) => setSearchLocation(e.target.value)}
-                                            className="pl-9 bg-black/20 border-white/10 text-white focus:border-indigo-500/50"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="space-y-2">
-                                    <label className="text-xs font-medium text-muted-foreground">Salary Expectations</label>
-                                    <div className="relative">
-                                        <DollarSign className="absolute left-3 top-2.5 w-4 h-4 text-gray-500" />
-                                        <Input 
-                                            placeholder="e.g. $120k+, Market Rate" 
-                                            value={salaryExpectation}
-                                            onChange={(e) => setSalaryExpectation(e.target.value)}
-                                            className="pl-9 bg-black/20 border-white/10 text-white focus:border-indigo-500/50"
-                                        />
-                                    </div>
+                    <div className="bg-[#0B0F1A]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
+                         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                            <div className="md:col-span-4 space-y-1.5">
+                                <label className="text-xs font-semibold text-gray-400 ml-1 uppercase tracking-wider">Target Role</label>
+                                <div className="relative group">
+                                    <Briefcase className="absolute left-3 top-3 w-4.5 h-4.5 text-gray-500 group-focus-within:text-indigo-400 transition-colors" />
+                                    <Input 
+                                        placeholder="e.g. Product Designer" 
+                                        value={searchRole}
+                                        onChange={(e) => setSearchRole(e.target.value)}
+                                        className="pl-10 h-12 bg-white/5 border-white/10 text-white focus:border-indigo-500/50 focus:bg-white/10 transition-all rounded-xl text-base shadow-inner"
+                                    />
                                 </div>
                             </div>
-                            <Button 
-                                onClick={handleSearch}
-                                disabled={loading || !searchRole}
-                                className="w-full mt-6 bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20"
-                            >
-                                {loading ? (
-                                    <>
-                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" /> Scanning Opportunities...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Search className="w-4 h-4 mr-2" /> Find Matching Jobs
-                                    </>
-                                )}
-                            </Button>
-                        </CardContent>
-                    </Card>
+                            <div className="md:col-span-3 space-y-1.5">
+                                <label className="text-xs font-semibold text-gray-400 ml-1 uppercase tracking-wider">Location</label>
+                                <div className="relative group">
+                                    <MapPin className="absolute left-3 top-3 w-4.5 h-4.5 text-gray-500 group-focus-within:text-emerald-400 transition-colors" />
+                                    <Input 
+                                        placeholder="e.g. Remote" 
+                                        value={searchLocation}
+                                        onChange={(e) => setSearchLocation(e.target.value)}
+                                        className="pl-10 h-12 bg-white/5 border-white/10 text-white focus:border-emerald-500/50 focus:bg-white/10 transition-all rounded-xl text-base shadow-inner"
+                                    />
+                                </div>
+                            </div>
+                            <div className="md:col-span-3 space-y-1.5">
+                                <label className="text-xs font-semibold text-gray-400 ml-1 uppercase tracking-wider">Salary</label>
+                                <div className="relative group">
+                                    <DollarSign className="absolute left-3 top-3 w-4.5 h-4.5 text-gray-500 group-focus-within:text-amber-400 transition-colors" />
+                                    <Input 
+                                        placeholder="e.g. $120k+" 
+                                        value={salaryExpectation}
+                                        onChange={(e) => setSalaryExpectation(e.target.value)}
+                                        className="pl-10 h-12 bg-white/5 border-white/10 text-white focus:border-amber-500/50 focus:bg-white/10 transition-all rounded-xl text-base shadow-inner"
+                                    />
+                                </div>
+                            </div>
+                            <div className="md:col-span-2">
+                                <Button 
+                                    onClick={() => handleSearch()}
+                                    disabled={loading || !searchRole}
+                                    className="w-full h-12 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 bg-[length:200%_auto] hover:bg-right transition-all duration-500 text-white shadow-lg shadow-indigo-500/25 rounded-xl font-semibold text-base"
+                                >
+                                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Find Matches"}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </motion.div>
 
                 {error && (
-                    <div className="text-center py-10 text-red-400 bg-white/5 rounded-xl border border-red-500/20 mb-8">
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-200 mb-8 max-w-2xl mx-auto">
                         {error}
-                    </div>
+                    </motion.div>
                 )}
 
-                {/* Results Section */}
+                {/* Results Grid */}
                 <div className="min-h-[400px]">
                     {loading ? (
-                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {[1, 2, 3, 4, 5, 6].map((i) => (
-                                <div key={i} className="h-[280px] bg-white/5 rounded-xl animate-pulse border border-white/5 p-6 space-y-4">
+                                <div key={i} className="h-[360px] bg-white/5 rounded-2xl animate-pulse border border-white/5 p-6 flex flex-col gap-4">
                                     <div className="flex justify-between items-start">
-                                        <div className="space-y-2 w-2/3">
-                                            <div className="h-4 w-12 bg-white/10 rounded" />
-                                            <div className="h-6 w-3/4 bg-white/10 rounded" />
-                                            <div className="h-4 w-1/2 bg-white/10 rounded" />
-                                        </div>
-                                        <div className="h-8 w-16 bg-white/10 rounded" />
+                                        <div className="h-14 w-14 rounded-2xl bg-white/10" />
+                                        <div className="h-14 w-14 rounded-full bg-white/10" />
                                     </div>
-                                    <div className="h-20 bg-white/5 rounded border border-white/5" />
-                                    <div className="flex gap-2">
-                                        <div className="h-6 w-16 bg-white/10 rounded-full" />
-                                        <div className="h-6 w-16 bg-white/10 rounded-full" />
+                                    <div className="space-y-2 mt-2">
+                                        <div className="h-6 w-3/4 bg-white/10 rounded" />
+                                        <div className="h-4 w-1/2 bg-white/10 rounded" />
                                     </div>
-                                    <div className="h-10 w-full bg-white/10 rounded mt-auto" />
+                                    <div className="flex-1 rounded-xl bg-white/5 mt-2" />
+                                     <div className="h-10 w-full bg-white/10 rounded-xl" />
                                 </div>
                             ))}
-                        </div>
+                         </div>
                     ) : jobs.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {jobs.map((job, index) => (
                                 <motion.div
                                     key={job.id || index}
@@ -248,89 +224,93 @@ const JobMatchesPage = () => {
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: index * 0.1 }}
                                 >
-                                    <Card className="bg-[#131722] border-white/5 hover:border-indigo-500/30 transition-all duration-300 group h-full flex flex-col">
-                                        <CardHeader className="pb-3">
-                                            <div className="flex justify-between items-start gap-4">
-                                                <div className="space-y-1">
-                                                    <Badge variant="outline" className="bg-indigo-500/10 text-indigo-300 border-indigo-500/20 text-[10px] mb-2 hover:bg-indigo-500/20">
-                                                        {job.type}
-                                                    </Badge>
-                                                    <CardTitle className="text-lg font-semibold text-white group-hover:text-indigo-400 transition-colors leading-tight">
-                                                        {job.title}
-                                                    </CardTitle>
-                                                    <div className="flex items-center gap-2 text-sm text-gray-400">
-                                                        <Building2 className="w-3.5 h-3.5" />
-                                                        {job.company}
-                                                    </div>
+                                    <Card className="group bg-[#131722]/80 backdrop-blur-md border-white/5 hover:border-indigo-500/30 transition-all duration-300 h-full flex flex-col hover:shadow-2xl hover:shadow-indigo-500/10 hover:-translate-y-1 overflow-hidden relative">
+                                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        
+                                        <CardHeader className="pb-4">
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-xl font-bold text-white shadow-inner group-hover:scale-105 transition-transform duration-300">
+                                                    {job.company.substring(0, 2).toUpperCase()}
                                                 </div>
-                                                <div className="flex flex-col items-end gap-1">
-                                                    <div className="flex items-center gap-1 text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded text-xs">
-                                                        {job.match_score}% Match
-                                                    </div>
-                                                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">{job.posted_date}</span>
+                                                <div className="flex items-center gap-3">
+                                                     <div className="text-right">
+                                                        <div className="text-[10px] uppercase tracking-wider text-emerald-400 font-bold">Match</div>
+                                                        <div className="text-xl font-bold text-white leading-none">{job.match_score}%</div>
+                                                     </div>
+                                                     <div className="h-12 w-12 relative flex items-center justify-center">
+                                                        <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                                                            <path className="text-white/10" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
+                                                            <path className="text-emerald-400 drop-shadow-[0_0_2px_rgba(52,211,153,0.8)]" strokeDasharray={`${job.match_score}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                                                        </svg>
+                                                        <div className="absolute inset-0 flex items-center justify-center">
+                                                            <Sparkles className="w-4 h-4 text-emerald-400 fill-emerald-400/20" />
+                                                        </div>
+                                                     </div>
                                                 </div>
+                                            </div>
+                                            <CardTitle className="text-xl font-bold text-white group-hover:text-indigo-400 transition-colors line-clamp-2 min-h-[3.5rem] flex items-center tracking-tight">
+                                                {job.title}
+                                            </CardTitle>
+                                            <div className="flex flex-wrap gap-x-4 gap-y-2 mt-3 text-sm text-gray-400 font-medium">
+                                                <span className="flex items-center gap-1.5"><Building2 className="w-4 h-4 text-indigo-400/70" /> {job.company}</span>
+                                                <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4 text-purple-400/70" /> {job.location}</span>
                                             </div>
                                         </CardHeader>
+                                        
                                         <CardContent className="space-y-4 flex-1">
-                                            <div className="flex items-center gap-4 text-xs text-gray-400">
-                                                <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded">
-                                                    <MapPin className="w-3 h-3" /> {job.location}
-                                                </div>
-                                                <div className="flex items-center gap-1.5 bg-white/5 px-2 py-1 rounded">
-                                                    <Globe className="w-3 h-3" /> Remote/Hybrid
-                                                </div>
-                                            </div>
-                                            
-                                            <div className="p-3 bg-indigo-500/5 rounded-lg border border-indigo-500/10">
-                                                <p className="text-xs text-indigo-200/80 leading-relaxed">
-                                                    <span className="font-semibold text-indigo-300">Why fits:</span> {job.match_reason}
+                                            {/* AI Insight Block */}
+                                            <div className="p-4 bg-gradient-to-br from-indigo-500/10 to-purple-500/5 rounded-xl border border-indigo-500/10 relative overflow-hidden group-hover:border-indigo-500/20 transition-colors">
+                                                <div className="absolute top-0 left-0 w-1 h-full bg-indigo-500/50" />
+                                                <p className="text-sm text-indigo-100/90 leading-relaxed relative z-10 italic">
+                                                    "{job.match_reason}"
                                                 </p>
                                             </div>
 
-                                            <div className="flex flex-wrap gap-2">
+                                            <div className="flex flex-wrap gap-2 pt-2">
                                                 {job.requirements?.slice(0, 3).map((skill, i) => (
-                                                    <span key={i} className="text-[10px] px-2 py-1 rounded-full bg-white/5 text-gray-400 border border-white/5">
+                                                    <span key={i} className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/5 text-gray-300 border border-white/5 shadow-sm group-hover:border-white/10 transition-colors">
                                                         {skill}
                                                     </span>
                                                 ))}
                                                 {job.requirements?.length > 3 && (
-                                                    <span className="text-[10px] px-2 py-1 rounded-full bg-white/5 text-gray-500">
-                                                        +{job.requirements.length - 3} more
+                                                    <span className="text-[11px] font-semibold px-2.5 py-1 rounded-lg bg-white/5 text-gray-500 border border-white/5">
+                                                        +{job.requirements.length - 3}
                                                     </span>
                                                 )}
                                             </div>
                                         </CardContent>
-                                        <CardFooter className="pt-4 border-t border-white/5 mt-auto">
-                                            <div className="w-full flex items-center justify-between gap-4">
-                                                <div>
-                                                    <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">Salary Range</p>
-                                                    <p className="text-sm font-medium text-white">{job.salary_range}</p>
-                                                </div>
-                                                <Button 
-                                                    className="bg-white text-black hover:bg-gray-200 gap-2 shadow-lg shadow-white/5"
-                                                    onClick={() => window.open(job.apply_link, '_blank')}
-                                                >
-                                                    Apply Now <ExternalLink className="w-3.5 h-3.5" />
-                                                </Button>
+
+                                        <CardFooter className="pt-4 border-t border-white/5 mt-auto flex justify-between items-center bg-black/20 p-5">
+                                            <div className="flex items-center gap-1.5 text-white font-semibold">
+                                                <span className="text-sm text-muted-foreground mr-1">Pay:</span>
+                                                {job.salary_range}
                                             </div>
+                                            <Button 
+                                                className="bg-white text-black hover:bg-indigo-50 hover:text-indigo-600 px-4 h-9 font-bold text-sm gap-2 transition-all shadow-lg shadow-white/5"
+                                                onClick={() => window.open(job.apply_link, '_blank')}
+                                            >
+                                                Apply <ExternalLink className="w-3.5 h-3.5" />
+                                            </Button>
                                         </CardFooter>
                                     </Card>
                                 </motion.div>
                             ))}
                         </div>
                     ) : (
-                        <div className="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed border-white/5 rounded-2xl bg-white/[0.01]">
-                            <div className="w-20 h-20 rounded-full bg-indigo-500/10 flex items-center justify-center mb-6 animate-pulse">
-                                <Search className="w-10 h-10 text-indigo-400" />
-                            </div>
-                            <h2 className="text-2xl font-bold text-white mb-2">Ready to Find Your Next Role?</h2>
-                            <p className="text-muted-foreground max-w-md mx-auto mb-8">
-                                Enter your preferred job role, location, and salary expectations above to get personalized job recommendations based on your resume analysis.
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 text-xs text-gray-500">
-                                <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> AI-Powered Matching</span>
-                                <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Salary Insights</span>
-                                <span className="flex items-center gap-1"><CheckCircle2 className="w-3 h-3 text-emerald-500" /> Remote Options</span>
+                        <div className="flex flex-col items-center justify-center py-24 text-center border border-white/5 rounded-3xl bg-[#0B0F1A]/50 backdrop-blur-sm relative overflow-hidden group">
+                            <div className="absolute inset-0 bg-grid-white/[0.02] [mask-image:radial-gradient(ellipse_at_center,black,transparent)]" />
+                            {/* Decorative background blobs */}
+                            <div className="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-[100px] group-hover:bg-indigo-500/30 transition-colors duration-1000" />
+                            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px] group-hover:bg-purple-500/30 transition-colors duration-1000" />
+                            
+                            <div className="relative z-10 max-w-xl mx-auto p-8">
+                                <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 flex items-center justify-center mb-8 mx-auto shadow-2xl border border-white/10 rotate-6 group-hover:rotate-12 transition-transform duration-500">
+                                    <Briefcase className="w-10 h-10 text-indigo-400 drop-shadow-[0_0_15px_rgba(129,140,248,0.5)]" />
+                                </div>
+                                <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4 tracking-tight">Find Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">Dream Role</span></h2>
+                                <p className="text-muted-foreground mb-8 text-lg leading-relaxed text-balance">
+                                    Enter your search criteria above. Our AI will analyze your profile against millions of data points to find opportunities where you'll thrive.
+                                </p>
                             </div>
                         </div>
                     )}
